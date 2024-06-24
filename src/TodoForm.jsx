@@ -5,6 +5,7 @@ import { Create } from '@mui/icons-material'
 import { InputAdornment } from '@mui/material'
 import { IconButton } from '@mui/material';
 
+
 export default function TodoForm({ addTodo }) {
     const [text, setText] = useState("")
     const handleChange = (evt) => {
@@ -14,6 +15,7 @@ export default function TodoForm({ addTodo }) {
         evt.preventDefault()
         addTodo(text)
         setText("")
+
     }
     return (
         <ListItem>
