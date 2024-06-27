@@ -33,7 +33,7 @@ export default function Todoitem({ todo, remove, toggle }) {
                         onChange={toggle}
                     />
                 </ListItemIcon>
-                <ListItemText id={labelId} primary={todo.text} />
+                <ListItemText id={labelId} primary={<p style={{ fontSize: '20px' }}>{todo.text}</p>} />
             </ListItemButton>
         </ListItem>
     )

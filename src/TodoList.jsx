@@ -4,6 +4,10 @@ import { useState, useEffect } from 'react';
 import Todoitem from './Todoitem';
 import TodoForm from './TodoForm';
 import { Box, Typography } from '@mui/material';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogTitle from '@mui/material/DialogTitle';
 
 // const initialTodos = [
 //     { id: 1, text: "walk the dog", completed: false },
@@ -20,6 +24,11 @@ const getInitialData = () => {
 
 export default function TodoList() {
     const [todos, setTodos] = useState(getInitialData)
+    const [open, setOpen] = React.useState(false);
+
+    const handleClose = () => {
+        setOpen(false);
+    };
     useEffect(() => {
         localStorage.setItem(
             'todos',
@@ -32,9 +41,13 @@ export default function TodoList() {
         })
     }
     const addTodo = (text) => {
-        setTodos(prevTodos => {
-            return [...prevTodos, { text: text, id: crypto.randomUUID(), completed: false }]
-        })
+        if (text.trim() === "") {
+            setOpen(true)
+        } else {
+            setTodos(prevTodos => {
+                return [...prevTodos, { text: text, id: crypto.randomUUID(), completed: false }]
+            })
+        }
     }
     const toggleTodo = (id) => {
         setTodos(prevTodos => {
@@ -55,12 +68,15 @@ export default function TodoList() {
             justifyContent: "center",
             flexDirection: "column",
             alignItems: "center",
-            m: 3
+            marginTop: 3,
+            marginBottom: 8,
+            marginLeft: 3,
+            marginRight: 3
         }}>
             <Typography variant="h2" component="h1" sx={{ flexGrow: 1 }}>
                 Todos
             </Typography>
-            <List sx={{ width: '100', maxWidth: 360, bgcolor: 'background.paper' }}>
+            <List sx={{ width: '100%', maxWidth: 600, bgcolor: 'background.paper' }}>
                 {todos.map((todo) => (
                     <Todoitem
                         todo={todo}
@@ -69,6 +85,23 @@ export default function TodoList() {
                         toggle={() => toggleTodo(todo.id)}
                     />
                 ))}
+                {open &&
+                    <React.Fragment>
+                        <Dialog
+                            open={open}
+                            onClose={handleClose}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                        >
+                            <DialogTitle id="alert-dialog-title">
+                                {"Please enter a valid todo item"}
+                            </DialogTitle>
+                            <DialogActions>
+                                <Button onClick={handleClose}>ok</Button>
+                            </DialogActions>
+                        </Dialog>
+                    </React.Fragment>
+                }
                 <TodoForm addTodo={addTodo} />
             </List>
         </Box>
