@@ -1,17 +1,35 @@
 import ListItem from '@mui/material/ListItem';
 import { TextField } from '@mui/material';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { InputAdornment } from '@mui/material'
 import { IconButton } from '@mui/material';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
+import ReactGA from "react-ga4"
 
 export default function TodoForm({ addTodo }) {
     const [text, setText] = useState("")
+    const firstEventSent = useRef(false);
     const handleChange = (evt) => {
         setText(evt.target.value)
     }
     const handleSubmit = (evt) => {
+
         evt.preventDefault()
+
+        if (!firstEventSent.current) {
+            ReactGA.event({
+                category: 'Form',
+                action: 'submit',
+                label: 'users'
+            });
+            firstEventSent.current = true;
+        }
+
+        ReactGA.event({
+            category: 'Form',
+            action: 'submit',
+            label: 'add-todo'
+        })
         addTodo(text)
         setText("")
     }
